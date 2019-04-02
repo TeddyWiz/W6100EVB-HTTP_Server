@@ -44,10 +44,18 @@ CGI for W6100-EVB consists the 'Request name + .cgi' using HTTP GET/POST request
 <br>
 ## TEST Result<br>
 ### serial Display<br>
- ![Serial_Display](image/serial.png)<br>
+ <p align="center">
+   <img width="60%" src="image/serial.png" />
+ </p>
 ### Web Page Main<br>
- ![Web_page](image/web_server_main.png)<br>
+<p align="center">
+  <img width="60%" src="image/web_server_main.png" />
+</p>
 ### Web Page NetWork Info<br>
- ![Web_page](image/web_server_netinfo.png)<br>
+<p align="center">
+  <img width="60%" src="image/web_server_netinfo.png" />
+</p>
 ### Web Page RGB LED Control<br>
- ![Web_page](image/web_server_RGB_Control.png)<br>
+<p align="center">
+  <img width="60%" src="image/web_server_RGB_Control.png" />
+</p>
