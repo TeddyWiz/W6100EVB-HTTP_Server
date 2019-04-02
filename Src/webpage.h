@@ -14,6 +14,10 @@
 									 "$('txtgw').value=o.gw;"\
 									 "$('txtsn').value=o.sn;"\
 									 "$('txtdns').value=o.dns;"\
+									 "$('txtlla').value=o.lla;"\
+									 "$('txtgua').value=o.gua;"\
+									 "$('txtsn6').value=o.sn6;"\
+									 "$('txtgw6').value=o.gw6;"\
 									 "if(typeof(window.external)!='undefined'){"\
 										"obj=$$_ie('input','dhcp');"\
 									 "}else{"\
@@ -141,12 +145,12 @@
 
 #define index_page			"<html>"\
 								"<head>"\
-								"<title>W5500-EVB Web Server</title>"\
+								"<title>W6100-EVB Web Server</title>"\
 								"<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>"\
 								"</head>"\
 								"<body>"\
 									"<div>"\
-									"W5500-EVB Web Server Demopage"\
+									"W6100-EVB Web Server Demopage"\
 									"</div>"\
 									"<br>"\
 									"<a href='netinfo.html'>Network Information</a>"\
@@ -166,7 +170,7 @@
 #define netinfo_page 		"<!DOCTYPE html>"\
 							"<html>"\
 								"<head>"\
-								"<title>W5500-EVB Web Server Network Info</title>"\
+								"<title>W6100-EVB Web Server Network Info</title>"\
 								"<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>"\
 								"<style>"\
 								"label{float:left;text-align:left;width:50px;}"\
@@ -177,7 +181,7 @@
 								"</head>"\
 								"<body onload='getNetinfo();'>"\
 									"<div>"\
-									"W5500-EVB Web Server Network Information"\
+									"W6100-EVB Web Server Network Information"\
 									"</div>"\
 									"<br>"\
 									"<ul>"\
@@ -186,6 +190,10 @@
 										"<li><label for='txtgw'>GW:</label><input id='txtgw' name='gw' type='text' size='20' disabled='disabled'/></li> "\
 										"<li><label for='txtsn'>SN:</label><input id='txtsn' name='sn' type='text' size='20' disabled='disabled'/></li> "\
 										"<li><label for='txtdns'>DNS:</label><input id='txtdns' name='dns' type='text' size='20' disabled='disabled'/></li> "\
+										"<li><label for='txtlla'>LLA:</label><input id='txtlla' name='lla' type='text' size='40' disabled='disabled'/></li> "\
+										"<li><label for='txtgua'>GUA:</label><input id='txtgua' name='gua' type='text' size='40' disabled='disabled'/></li> "\
+										"<li><label for='txtsn6'>SN6:</label><input id='txtsn6' name='sn6' type='text' size='40' disabled='disabled'/></li> "\
+										"<li><label for='txtgw6'>GW6:</label><input id='txtgw6' name='gw6' type='text' size='40' disabled='disabled'/></li> "\
 									"</ul>"\
 								"</body>"\
 							"</html>"
