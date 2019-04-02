@@ -27,6 +27,4 @@ int32_t loopback_tcpc(uint8_t sn, uint8_t* buf, uint8_t* destip, uint16_t destpo
 /* UDP Loopback test example */
 int32_t loopback_udps(uint8_t sn, uint8_t* buf, uint16_t port, uint8_t ip_ver);
 
-static void proc_http(unsigned char s,	u_char * buf);
-static u_int replace_sys_env_value(u_char* base, u_int len);
 #endif

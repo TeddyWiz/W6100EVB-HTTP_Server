@@ -52,6 +52,7 @@ int32_t loopback_tcps(uint8_t sn, uint16_t port, uint8_t* buf, uint8_t ip_ver)
 			while(size != sentsize)
 			{
 				ret = send(sn, buf+sentsize, size-sentsize);
+				printf("Recv[%d]:[%s]\r\n", sn, buf+sentsize);
 				if(ret < 0)
 				{
 					close(sn);

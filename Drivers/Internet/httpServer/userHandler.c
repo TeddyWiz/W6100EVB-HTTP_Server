@@ -17,30 +17,18 @@
 #include "userHandler.h"
 //#include "adcHandler.h"
 #include "wizchip_conf.h"
+#include "main.h"
 
-/* Unavailable Pins  (W5500-EVB component preempted) */
-// >> UART Rx/Tx 		: D0 (Rx), D1 (Tx)
-// >> W5500 SPI(SPI0)	: D11 (MOSI), D12 (MISO), D13 (SCK)
+// Data IO Status
+typedef enum
+{
+	Off	= 0,
+	On 	= 1
+} IO_Status_Type;
 
-/* On-board Devices */
-// >> Input		: D14 (SW1) / D15 (SW2)
-// >> Input		: AIN (Potentiometer / TEMP.Sensor)
-// >> Output	: D8 (LED R) / D9 (LED G) / D10 (LED B)
-
-/* NXP LPC11Exx GPIO functions */
-// GPIO: Pin state
-//Chip_GPIO_GetPinState(LPC_GPIO, dio_ports[pin], dio_pins[pin]);
-//Chip_GPIO_SetPinState(LPC_GPIO, dio_ports[pin], dio_pins[pin], true);
-//Chip_GPIO_SetPinState(LPC_GPIO, dio_ports[pin], dio_pins[pin], false);
-
-// GPIO: Pin direction
-//Chip_GPIO_GetPinDIR((LPC_GPIO, dio_ports[pin], dio_pins[pin]);
-//Chip_GPIO_SetPinDIROutput(LPC_GPIO, dio_ports[pin], dio_pins[pin]);
-//Chip_GPIO_SetPinDIRInput(LPC_GPIO, dio_ports[pin], dio_pins[pin]);
+uint16_t LED_pin[3]={GPIO_PIN_6, GPIO_PIN_8, GPIO_PIN_9};
 
 // Pre-defined Get CGI functions
-void make_json_dio(uint8_t * buf, uint16_t * len, uint8_t pin);
-void make_json_ain(uint8_t * buf, uint16_t * len, uint8_t pin);
 void make_json_netinfo(uint8_t * buf, uint16_t * len);
 
 // Pre-defined Set CGI functions
@@ -50,11 +38,10 @@ int8_t set_diostate(uint8_t * uri);
 uint8_t predefined_get_cgi_processor(uint8_t * uri_name, uint8_t * buf, uint16_t * len)
 {
 	uint8_t ret = 1;	// ret = 1 means 'uri_name' matched
-	uint8_t cgibuf[14] = {0, };
+	//uint8_t cgibuf[14] = {0, };
 	int8_t cgi_dio = -1;
 	int8_t cgi_ain = -1;
 
-	uint8_t i;
 
 	if(strcmp((const char *)uri_name, "todo.cgi") == 0)
 	{
@@ -63,41 +50,10 @@ uint8_t predefined_get_cgi_processor(uint8_t * uri_name, uint8_t * buf, uint16_t
 	}
 	else if(strcmp((const char *)uri_name, "get_netinfo.cgi") == 0)
 	{
-		printf("make_json_netinfo \r\n");//make_json_netinfo(buf, len);
+		make_json_netinfo(buf, len);
 	}
 	else
 	{
-		printf("make_json_dio \r\n");
-		// get_dio0.cgi ~ get_dio15.cgi
-		/*for(i = 0; i < DIOn; i++)
-		{
-			memset(cgibuf, 0x00, 14);
-			sprintf((char *)cgibuf, "get_dio%d.cgi", i);
-			if(strcmp((const char *)uri_name, (const char *)cgibuf) == 0)
-			{
-				//make_json_dio(buf, len, i);
-				printf("make_json_dio \r\n");
-				cgi_dio = i;
-				break;
-			}
-		}
-
-		if(cgi_dio < 0)
-		{
-			// get_ain0.cgi ~ get_ain5.cgi (A0 - A5), get_ain6.cgi for on-board potentiometer / Temp.Sensor
-			for(i = 0; i < AINn; i++)
-			{
-				memset(cgibuf, 0x00, 14);
-				sprintf((char *)cgibuf, "get_ain%d.cgi", i);
-				if(strcmp((const char *)uri_name, (const char *)cgibuf) == 0)
-				{
-					make_json_ain(buf, len, i);
-					cgi_ain = i;
-					break;
-				}
-			}
-		}*/
-
 		if((cgi_dio < 0) && (cgi_ain < 0)) ret = 0;
 	}
 
@@ -116,18 +72,10 @@ uint8_t predefined_set_cgi_processor(uint8_t * uri_name, uint8_t * uri, uint8_t 
 		;//val = todo(uri);
 		//*len = sprintf((char *)buf, "%d", val);
 	}
-	// Digital I/O; dio_s, dio_d
-	else if(strcmp((const char *)uri_name, "set_diodir.cgi") == 0)
-	{
-		printf("set_diodir \r\n");
-		//val = set_diodir(uri);
-		//*len = sprintf((char *)buf, "%d", val);
-	}
 	else if(strcmp((const char *)uri_name, "set_diostate.cgi") == 0)
 	{
-		printf("set_diostate.cgi \r\n");
-		//val = set_diostate(uri);
-		//*len = sprintf((char *)buf, "%d", val);
+		val = set_diostate(uri);
+		*len = sprintf((char *)buf, "%d", val);
 	}
 	else
 	{
@@ -140,80 +88,44 @@ uint8_t predefined_set_cgi_processor(uint8_t * uri_name, uint8_t * uri, uint8_t 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Pre-defined Get CGI functions
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-void make_json_dio(uint8_t * buf, uint16_t * len, uint8_t pin)
-{
-	uint8_t pin_state 	= Chip_GPIO_GetPinState(LPC_GPIO, dio_ports[pin], dio_pins[pin]);
-	uint8_t pin_dir 	= Chip_GPIO_GetPinDIR(LPC_GPIO, dio_ports[pin], dio_pins[pin]);
-
-	*len = sprintf((char *)buf, "DioCallback({\"dio_p\":\"%d\",\
-											\"dio_s\":\"%d\",\
-											\"dio_d\":\"%d\"\
-											});",
-											pin,					// Digital io pin number
-											pin_state,				// Digital io status
-											pin_dir					// Digital io directions
-											);
-}
-
-void make_json_ain(uint8_t * buf, uint16_t * len, uint8_t pin)
-{
-	*len = sprintf((char *)buf, "AinCallback({\"ain_p\":\"%d\",\
-											\"ain_v\":\"%d\"\
-											});",
-											pin,					// ADC input pin number
-											get_ADC_val(pin)		// ADC input value
-											);
-}
 
 void make_json_netinfo(uint8_t * buf, uint16_t * len)
 {
 	wiz_NetInfo netinfo;
-	ctlnetwork(CN_GET_NETINFO, (void*) &netinfo);
-
+	//ctlnetwork(CN_GET_NETINFO, (void*) &netinfo);
+    wizchip_getnetinfo((void*) &netinfo);
 	// DHCP: 1 - Static, 2 - DHCP
 	*len = sprintf((char *)buf, "NetinfoCallback({\"mac\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\",\
 											\"ip\":\"%d.%d.%d.%d\",\
 											\"gw\":\"%d.%d.%d.%d\",\
 											\"sn\":\"%d.%d.%d.%d\",\
 											\"dns\":\"%d.%d.%d.%d\",\
-											\"dhcp\":\"%d\"\
+											\"lla\":\"%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X\",\
+			                                \"gua\":\"%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X\",\
+											\"sn6\":\"%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X\",\
+											\"gw6\":\"%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X\",\
+			                                \"dhcp\":\"%d\"\
 											});",
 											netinfo.mac[0], netinfo.mac[1], netinfo.mac[2], netinfo.mac[3], netinfo.mac[4], netinfo.mac[5],
 											netinfo.ip[0], netinfo.ip[1], netinfo.ip[2], netinfo.ip[3],
 											netinfo.gw[0], netinfo.gw[1], netinfo.gw[2], netinfo.gw[3],
 											netinfo.sn[0], netinfo.sn[1], netinfo.sn[2], netinfo.sn[3],
 											netinfo.dns[0], netinfo.dns[1], netinfo.dns[2], netinfo.dns[3],
+											netinfo.lla[0],netinfo.lla[1],netinfo.lla[2],netinfo.lla[3],netinfo.lla[4],netinfo.lla[5],netinfo.lla[6],netinfo.lla[7],
+											netinfo.lla[8],netinfo.lla[9],netinfo.lla[10],netinfo.lla[11],netinfo.lla[12],netinfo.lla[13],netinfo.lla[14],netinfo.lla[15],
+											netinfo.gua[0],netinfo.lla[1],netinfo.gua[2],netinfo.gua[3],netinfo.gua[4],netinfo.gua[5],netinfo.gua[6],netinfo.gua[7],
+											netinfo.gua[8],netinfo.gua[9],netinfo.gua[10],netinfo.gua[11],netinfo.gua[12],netinfo.gua[13],netinfo.gua[14],netinfo.gua[15],
+											netinfo.sn6[0],netinfo.sn6[1],netinfo.sn6[2],netinfo.sn6[3],netinfo.sn6[4],netinfo.sn6[5],netinfo.sn6[6],netinfo.sn6[7],
+											netinfo.sn6[8],netinfo.sn6[9],netinfo.sn6[10],netinfo.sn6[11],netinfo.sn6[12],netinfo.sn6[13],netinfo.sn6[14],netinfo.sn6[15],
+											netinfo.gw6[0],netinfo.gw6[1],netinfo.gw6[2],netinfo.gw6[3],netinfo.gw6[4],netinfo.gw6[5],netinfo.gw6[6],netinfo.gw6[7],
+											netinfo.gw6[8],netinfo.gw6[9],netinfo.gw6[10],netinfo.gw6[11],netinfo.gw6[12],netinfo.gw6[13],netinfo.gw6[14],netinfo.gw6[15],
 											netinfo.dhcp
 											);
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Pre-defined Set CGI functions
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int8_t set_diodir(uint8_t * uri)
-{
-	uint8_t * param;
-	uint8_t pin = 0, val = 0;
-
-	if((param = get_http_param_value((char *)uri, "pin"))) // GPIO; D0 ~ D15
-	{
-		pin = (uint8_t)ATOI(param, 10);
-		if(pin > 15) return -1;
-
-		if((param = get_http_param_value((char *)uri, "val")))  // Direction; NotUsed/Input/Output
-		{
-			val = (uint8_t)ATOI(param, 10);
-			if(val > Output) val = Output;
-		}
-	}
-
-	if(val == Input) 		Chip_GPIO_SetPinDIRInput(LPC_GPIO, dio_ports[pin], dio_pins[pin]);	// Input
-	else 					Chip_GPIO_SetPinDIROutput(LPC_GPIO, dio_ports[pin], dio_pins[pin]); // Output
-
-	return pin;
-}
 
 int8_t set_diostate(uint8_t * uri)
 {
@@ -230,11 +142,11 @@ int8_t set_diostate(uint8_t * uri)
 			val = (uint8_t)ATOI(param, 10);
 			if(val > On) val = On;
 		}
-
-		if(val == On) 		Chip_GPIO_SetPinState(LPC_GPIO, dio_ports[pin], dio_pins[pin], true); 	// High
-		else				Chip_GPIO_SetPinState(LPC_GPIO, dio_ports[pin], dio_pins[pin], false);	// Low
+		printf("set_diostate.cgi LED out pin[%d] \r\n", pin );
+		if(val == On) 		HAL_GPIO_WritePin(GPIOC, LED_pin[pin], GPIO_PIN_SET);	// High
+		else				HAL_GPIO_WritePin(GPIOC, LED_pin[pin], GPIO_PIN_RESET);	// Low
 	}
 
 	return pin;
 }
-*/
+

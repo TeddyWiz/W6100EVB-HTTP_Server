@@ -49,6 +49,9 @@ uint8_t socknumlist[] = {2, 3};
 
 uint8_t RX_BUF[DATA_BUF_SIZE];
 uint8_t TX_BUF[DATA_BUF_SIZE];
+uint8_t URX_BUF[DATA_BUF_SIZE];
+unsigned int URX_BUF_cnt = 0;
+unsigned int URX_BUF_Flag = 0;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -62,6 +65,7 @@ SPI_HandleTypeDef hspi2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
+//Network Info Setting
 wiz_NetInfo gWIZNETINFO = { .mac = {0x00,0x08,0xdc,0x57,0x57,0x20},
 							.ip = {192,168,0,13},
 							.sn = {255, 255, 255, 0},
@@ -117,8 +121,9 @@ static void MX_GPIO_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
-uint8_t rxData[2];
+uint8_t rxData;
 
+// Using printf Function
 int _write(int fd, char *str, int len)
 {
 	for(int i=0; i<len; i++)
@@ -139,14 +144,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
      /*
        loop back received data
      */
-     HAL_UART_Receive_IT(&huart1, rxData, 1);
-     HAL_UART_Transmit(&huart1, rxData, 1, 1000);
+     HAL_UART_Receive_IT(&huart1, &rxData, 1);
+     HAL_UART_Transmit(&huart1, &rxData, 1, 1000);
+     URX_BUF[URX_BUF_cnt++] = rxData;
+     if((rxData == '\r') ||(URX_BUF_cnt > DATA_BUF_SIZE))
+     {
+    	 URX_BUF_Flag = 1;
+     }
 }
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+// Wiznet Chip SETTING
 void csEnable(void)
 {
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);
@@ -204,7 +215,6 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	uint8_t i;
-	uint8_t ain_sel = 0; // Bit for Analog input selection
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -228,10 +238,10 @@ int main(void)
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_Transmit(&huart1, (uint8_t *)"Hello! test module \n", 18, 10);
-  HAL_UART_Receive_IT(&huart1, rxData, 1);
 
-  printf("< W6100EVB Hal Driver Loop Back TEST!! >\n");
+  HAL_UART_Receive_IT(&huart1, &rxData, 1);
+
+  printf("< W6100EVB Web Server & Loop Back TEST!! >\n");
 
   /* SPI method callback registration */
   reg_wizchip_spi_cbfunc(spiReadByte, spiWriteByte);
@@ -256,23 +266,15 @@ int main(void)
 		// Index page and netinfo / base64 image demo
 		reg_httpServer_webContent((uint8_t *)"index.html", (uint8_t *)index_page);				// index.html 		: Main page example
 		reg_httpServer_webContent((uint8_t *)"netinfo.html", (uint8_t *)netinfo_page);			// netinfo.html 	: Network information example page
-		reg_httpServer_webContent((uint8_t *)"netinfo.js", (uint8_t *)wiz550web_netinfo_js);	// netinfo.js 		: JavaScript for Read Network configuration 	(+ ajax.js)
+		reg_httpServer_webContent((uint8_t *)"netinfo.js", (uint8_t *)wiz6100web_netinfo_js);	// netinfo.js 		: JavaScript for Read Network configuration 	(+ ajax.js)
 		reg_httpServer_webContent((uint8_t *)"img.html", (uint8_t *)img_page);					// img.html 		: Base64 Image data example page
 
 		// Example #1
 		reg_httpServer_webContent((uint8_t *)"dio.html", (uint8_t *)dio_page);					// dio.html 		: Digital I/O control example page
-		reg_httpServer_webContent((uint8_t *)"dio.js", (uint8_t *)wiz550web_dio_js);			// dio.js 			: JavaScript for digital I/O control 	(+ ajax.js)
-
-		// Example #2
-		reg_httpServer_webContent((uint8_t *)"ain.html", (uint8_t *)ain_page);					// ain.html 		: Analog input monitor example page
-		reg_httpServer_webContent((uint8_t *)"ain.js", (uint8_t *)wiz550web_ain_js);			// ain.js 			: JavaScript for Analog input monitor	(+ ajax.js)
-
-		// Example #3
-		reg_httpServer_webContent((uint8_t *)"ain_gauge.html", (uint8_t *)ain_gauge_page);		// ain_gauge.html 	: Analog input monitor example page; using Google Gauge chart
-		reg_httpServer_webContent((uint8_t *)"ain_gauge.js", (uint8_t *)ain_gauge_js);			// ain_gauge.js 	: JavaScript for Google Gauge chart		(+ ajax.js)
+		reg_httpServer_webContent((uint8_t *)"dio.js", (uint8_t *)wiz6100web_dio_js);			// dio.js 			: JavaScript for digital I/O control 	(+ ajax.js)
 
 		// AJAX JavaScript functions
-		reg_httpServer_webContent((uint8_t *)"ajax.js", (uint8_t *)wiz550web_ajax_js);			// ajax.js			: JavaScript for AJAX request transfer
+		reg_httpServer_webContent((uint8_t *)"ajax.js", (uint8_t *)wiz6100web_ajax_js);			// ajax.js			: JavaScript for AJAX request transfer
 
 	}
   /* Infinite loop */
@@ -280,8 +282,17 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	if(URX_BUF_Flag)
+	{
+		URX_BUF_Flag = 0;
+		URX_BUF[URX_BUF_cnt] = 0;
+		printf("\r\n input[%s]\r\n", URX_BUF);
+		if(getSn_SR(1) == SOCK_ESTABLISHED)
+			send(1, URX_BUF, URX_BUF_cnt);
+		URX_BUF_cnt = 0;
+	}
 	for(i = 0; i < MAX_HTTPSOCK; i++)	httpServer_run(i); 	// HTTP Server handler
-
+	loopback_tcps(0,5000, data_buf, AF_INET6);
 	loopback_tcps(1,5001, data_buf, AF_INET);
     /* USER CODE BEGIN 3 */
   }
