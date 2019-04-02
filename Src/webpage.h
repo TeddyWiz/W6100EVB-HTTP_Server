@@ -202,7 +202,7 @@
 #define dio_page  			"<!DOCTYPE html>"\
 							"<html>"\
 								"<head>"\
-								"<title>W5500-EVB Web Server Digital I/O</title>"\
+								"<title>W6100-EVB Web Server Digital I/O</title>"\
 								"<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>"\
 								"<script type='text/javascript' src='ajax.js'></script>"\
 								"<script type='text/javascript' src='dio.js'></script>"\
@@ -210,14 +210,14 @@
 								"<body>"\
 									"<!-- to do -->"\
 									"<div>"\
-									"<input type='button' value='LED R On' pin='8' s='0' onclick='setDiostate(this);'> "\
-									"<input type='button' value='LED R Off' pin='8' s= '1' onclick='setDiostate(this);'>"\
+									"<input type='button' value='LED R On' pin='0' s='0' onclick='setDiostate(this);'> "\
+									"<input type='button' value='LED R Off' pin='0' s= '1' onclick='setDiostate(this);'>"\
 									"<br>"\
-									"<input type='button' value='LED G On' pin='9' s='0' onclick='setDiostate(this);'> "\
-									"<input type='button' value='LED G Off' pin='9' s= '1' onclick='setDiostate(this);'>"\
+									"<input type='button' value='LED G On' pin='1' s='0' onclick='setDiostate(this);'> "\
+									"<input type='button' value='LED G Off' pin='1' s= '1' onclick='setDiostate(this);'>"\
 									"<br>"\
-									"<input type='button' value='LED B On' pin='10' s='0' onclick='setDiostate(this);'> "\
-									"<input type='button' value='LED B Off' pin='10' s= '1' onclick='setDiostate(this);'>"\
+									"<input type='button' value='LED B On' pin='2' s='0' onclick='setDiostate(this);'> "\
+									"<input type='button' value='LED B Off' pin='2' s= '1' onclick='setDiostate(this);'>"\
 									"</div>"\
 									"<!-- to do -->"\
 								"</body>"\
@@ -227,7 +227,7 @@
 #define ain_page  			"<!DOCTYPE html>"\
 							"<html>"\
 								"<head>"\
-								"<title>W5500-EVB Web Server Analog Input</title>"\
+								"<title>W6100-EVB Web Server Analog Input</title>"\
 								"<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />"\
 								"<meta http-equiv='pragma' content='no-cache' />"\
  	 	 	 	 	 	 	 	"<meta http-equiv='content-type' content='no-cache, no-store, must-revalidate' />"\

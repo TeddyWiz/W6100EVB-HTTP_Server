@@ -17,7 +17,16 @@
 #include "userHandler.h"
 //#include "adcHandler.h"
 #include "wizchip_conf.h"
+#include "main.h"
 
+// Data IO Status
+typedef enum
+{
+	Off	= 0,
+	On 	= 1
+} IO_Status_Type;
+
+uint16_t LED_pin[3]={GPIO_PIN_6, GPIO_PIN_8, GPIO_PIN_9};
 /* Unavailable Pins  (W5500-EVB component preempted) */
 // >> UART Rx/Tx 		: D0 (Rx), D1 (Tx)
 // >> W5500 SPI(SPI0)	: D11 (MOSI), D12 (MISO), D13 (SCK)
@@ -127,8 +136,8 @@ uint8_t predefined_set_cgi_processor(uint8_t * uri_name, uint8_t * uri, uint8_t 
 	else if(strcmp((const char *)uri_name, "set_diostate.cgi") == 0)
 	{
 		printf("set_diostate.cgi \r\n");
-		//val = set_diostate(uri);
-		//*len = sprintf((char *)buf, "%d", val);
+		val = set_diostate(uri);
+		*len = sprintf((char *)buf, "%d", val);
 	}
 	else
 	{
@@ -227,7 +236,7 @@ int8_t set_diodir(uint8_t * uri)
 
 	return pin;
 }
-
+*/
 int8_t set_diostate(uint8_t * uri)
 {
 	uint8_t * param;
@@ -243,11 +252,11 @@ int8_t set_diostate(uint8_t * uri)
 			val = (uint8_t)ATOI(param, 10);
 			if(val > On) val = On;
 		}
-
-		if(val == On) 		Chip_GPIO_SetPinState(LPC_GPIO, dio_ports[pin], dio_pins[pin], true); 	// High
-		else				Chip_GPIO_SetPinState(LPC_GPIO, dio_ports[pin], dio_pins[pin], false);	// Low
+		printf("set_diostate.cgi LED out pin[%d] \r\n", pin );
+		if(val == On) 		HAL_GPIO_WritePin(GPIOC, LED_pin[pin], GPIO_PIN_SET);//Chip_GPIO_SetPinState(LPC_GPIO, dio_ports[pin], dio_pins[pin], true); 	// High
+		else				HAL_GPIO_WritePin(GPIOC, LED_pin[pin], GPIO_PIN_RESET);//Chip_GPIO_SetPinState(LPC_GPIO, dio_ports[pin], dio_pins[pin], false);	// Low
 	}
 
 	return pin;
 }
-*/
+
