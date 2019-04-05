@@ -203,7 +203,7 @@ int main(void)
 
   /* HTTP Server Initialization  */
   httpServer_init(TX_BUF, RX_BUF, MAX_HTTPSOCK, socknumlist);		// Tx/Rx buffers (1kB) / The number of W5500 chip H/W sockets in use
- 
+
   /* Web content registration (web content in webpage.h, Example web pages) */
   wed_define_func();
 

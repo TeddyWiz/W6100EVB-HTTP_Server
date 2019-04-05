@@ -43,8 +43,11 @@
 									<listOptionValue builtIn="false" value="&quot;${PROJECT}/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PROJECT}/Drivers/CMSIS/Device/ST/STM32F1xx/Include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PROJECT}/Drivers/CMSIS/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PROJECT}/Drivers/Ethernet&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PROJECT}/Drivers/Internet/httpServer&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT}/Src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT}/Drivers/io6Library/Ethernet/W6100&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT}/Drivers/io6Library/Ethernet&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${PROJECT}/Drivers/io6Library/Application&quot;"/>
 								</option>
 								<option id="com.atollic.truestudio.gcc.symbols.defined.1670122205" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
