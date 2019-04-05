@@ -118,8 +118,7 @@ void make_json_netinfo(uint8_t * buf, uint16_t * len)
 											netinfo.sn6[0],netinfo.sn6[1],netinfo.sn6[2],netinfo.sn6[3],netinfo.sn6[4],netinfo.sn6[5],netinfo.sn6[6],netinfo.sn6[7],
 											netinfo.sn6[8],netinfo.sn6[9],netinfo.sn6[10],netinfo.sn6[11],netinfo.sn6[12],netinfo.sn6[13],netinfo.sn6[14],netinfo.sn6[15],
 											netinfo.gw6[0],netinfo.gw6[1],netinfo.gw6[2],netinfo.gw6[3],netinfo.gw6[4],netinfo.gw6[5],netinfo.gw6[6],netinfo.gw6[7],
-											netinfo.gw6[8],netinfo.gw6[9],netinfo.gw6[10],netinfo.gw6[11],netinfo.gw6[12],netinfo.gw6[13],netinfo.gw6[14],netinfo.gw6[15],
-											netinfo.dhcp
+											netinfo.gw6[8],netinfo.gw6[9],netinfo.gw6[10],netinfo.gw6[11],netinfo.gw6[12],netinfo.gw6[13],netinfo.gw6[14],netinfo.gw6[15]
 											);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

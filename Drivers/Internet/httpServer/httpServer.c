@@ -130,7 +130,6 @@ void httpServer_run(uint8_t seqnum)
 
 	// Get the H/W socket number
 	s = getHTTPSocketNum(seqnum);
-
 	/* HTTP Service Start */
 	switch(getSn_SR(s))
 	{
@@ -156,7 +155,7 @@ void httpServer_run(uint8_t seqnum)
 						parse_http_request(parsed_http_request, (uint8_t *)http_request);
 #ifdef _HTTPSERVER_DEBUG_
 						getSn_DIPR(s, destip);
-						destport = getSn_DPORT(s);
+						destport = _Sn_DPORTR_(s);
 						printf("\r\n");
 						printf("> HTTPSocket[%d] : HTTP Request received ", s);
 						printf("from %d.%d.%d.%d : %d\r\n", destip[0], destip[1], destip[2], destip[3], destport);

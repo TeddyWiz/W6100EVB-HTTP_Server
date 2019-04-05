@@ -26,7 +26,7 @@
 #include "socket.h"
 #include "httpServer.h"
 #include "webpage.h"
-
+#include "W6100RelFunctions.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -39,12 +39,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define SOCK_TCPS       0
-#define SOCK_UDPS       1
-#define PORT_TCPS		5000
-#define PORT_UDPS       3000
 
-#define MAX_HTTPSOCK	2
 uint8_t socknumlist[] = {2, 3};
 
 uint8_t RX_BUF[DATA_BUF_SIZE];
@@ -71,7 +66,6 @@ wiz_NetInfo gWIZNETINFO = { .mac = {0x00,0x08,0xdc,0x57,0x57,0x20},
 							.sn = {255, 255, 255, 0},
 							.gw = {192, 168, 0, 1},
 							.dns = {168, 126, 63, 1},
-							.dhcp = NETINFO_STATIC,
 							.lla = {0xfe,0x80, 0x00,0x00,
 								 0x00,0x00, 0x00,0x00,
 								 0x02,0x08, 0xdc,0xff,
@@ -113,6 +107,7 @@ uint8_t Router_IP[16]= {0xff,0x02,0x00,0x00,
                          };
 uint8_t data_buf[2048];
 void print_network_information(void);
+void wed_define_func(void);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -157,54 +152,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-// Wiznet Chip SETTING
-void csEnable(void)
-{
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);
-}
 
-void csDisable(void)
-{
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);
-}
-
-void spiWriteByte(uint8_t tx)
-{
-	uint8_t rx;
-	HAL_SPI_TransmitReceive(&hspi2, &tx, &rx, 1, 10);
-}
-
-uint8_t spiReadByte(void)
-{
-	uint8_t rx = 0, tx = 0xFF;
-	HAL_SPI_TransmitReceive(&hspi2, &tx, &rx, 1, 10);
-	return rx;
-}
-void W6100Initialze(void)
-{
-	intr_kind temp;
-	unsigned char W6100_AdrSet[2][4] = {{2,2,2,2},{2,2,2,2}};
-	/*
-	 */
-	temp = IK_DEST_UNREACH;
-
-	if(ctlwizchip(CW_INIT_WIZCHIP,(void*)W6100_AdrSet) == -1)
-	{
-		printf("W6100 initialized fail.\r\n");
-	}
-
-	if(ctlwizchip(CW_SET_INTRMASK,&temp) == -1)
-	{
-		printf("W6100 interrupt\r\n");
-	}
-	printf("interrupt mask: %02x\r\n",getIMR());
-
-	do{//check phy status.
-		if(ctlwizchip(CW_GET_PHYLINK,(void*)&temp) == -1){
-			printf("Unknown PHY link status.\r\n");
-		}
-	}while(temp == PHY_LINK_OFF);
-}
 /* USER CODE END 0 */
 
 /**
@@ -241,42 +189,24 @@ int main(void)
 
   HAL_UART_Receive_IT(&huart1, &rxData, 1);
 
-  printf("< W6100EVB Web Server & Loop Back TEST!! >\n");
+  printf("< W6100EVB Web Server & Loop Back TEST!! > \r\n");
 
-  /* SPI method callback registration */
-  reg_wizchip_spi_cbfunc(spiReadByte, spiWriteByte);
-  /* CS function register */
-  reg_wizchip_cs_cbfunc(csEnable,csDisable);
+
 
   NETUNLOCK();
   wizchip_setnetinfo(&gWIZNETINFO);
   W6100Initialze();
 
-  printf("VERSION(%x) = %.2x \r\n", VER,getVER());
+  printf("VERSION(%x) = %.2x \r\n", _VER_, getVER());
   print_network_information();
   /* USER CODE END 2 */
 
   /* HTTP Server Initialization  */
   httpServer_init(TX_BUF, RX_BUF, MAX_HTTPSOCK, socknumlist);		// Tx/Rx buffers (1kB) / The number of W5500 chip H/W sockets in use
-  //reg_httpServer_cbfunc(NVIC_SystemReset, NULL); 					// Callback: NXP MCU Reset
+ 
+  /* Web content registration (web content in webpage.h, Example web pages) */
+  wed_define_func();
 
-	{
-		/* Web content registration (web content in webpage.h, Example web pages) */
-
-		// Index page and netinfo / base64 image demo
-		reg_httpServer_webContent((uint8_t *)"index.html", (uint8_t *)index_page);				// index.html 		: Main page example
-		reg_httpServer_webContent((uint8_t *)"netinfo.html", (uint8_t *)netinfo_page);			// netinfo.html 	: Network information example page
-		reg_httpServer_webContent((uint8_t *)"netinfo.js", (uint8_t *)wiz6100web_netinfo_js);	// netinfo.js 		: JavaScript for Read Network configuration 	(+ ajax.js)
-		reg_httpServer_webContent((uint8_t *)"img.html", (uint8_t *)img_page);					// img.html 		: Base64 Image data example page
-
-		// Example #1
-		reg_httpServer_webContent((uint8_t *)"dio.html", (uint8_t *)dio_page);					// dio.html 		: Digital I/O control example page
-		reg_httpServer_webContent((uint8_t *)"dio.js", (uint8_t *)wiz6100web_dio_js);			// dio.js 			: JavaScript for digital I/O control 	(+ ajax.js)
-
-		// AJAX JavaScript functions
-		reg_httpServer_webContent((uint8_t *)"ajax.js", (uint8_t *)wiz6100web_ajax_js);			// ajax.js			: JavaScript for AJAX request transfer
-
-	}
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -292,8 +222,8 @@ int main(void)
 		URX_BUF_cnt = 0;
 	}
 	for(i = 0; i < MAX_HTTPSOCK; i++)	httpServer_run(i); 	// HTTP Server handler
-	loopback_tcps(0,5000, data_buf, AF_INET6);
-	loopback_tcps(1,5001, data_buf, AF_INET);
+	loopback_tcps(0, data_buf, 5000, AF_INET6);
+	loopback_tcps(1, data_buf, 5001, AF_INET);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -475,6 +405,23 @@ void print_network_information(void)
 									gWIZNETINFO.gw6[8],gWIZNETINFO.gw6[9],gWIZNETINFO.gw6[10],gWIZNETINFO.gw6[11],\
 									gWIZNETINFO.gw6[12],gWIZNETINFO.gw6[13],gWIZNETINFO.gw6[14],gWIZNETINFO.gw6[15]);
 
+
+}
+
+void wed_define_func(void)
+{
+	// Index page and netinfo / base64 image demo
+	reg_httpServer_webContent((uint8_t *)"index.html", (uint8_t *)index_page);				// index.html 		: Main page example
+	reg_httpServer_webContent((uint8_t *)"netinfo.html", (uint8_t *)netinfo_page);			// netinfo.html 	: Network information example page
+	reg_httpServer_webContent((uint8_t *)"netinfo.js", (uint8_t *)wiz6100web_netinfo_js);	// netinfo.js 		: JavaScript for Read Network configuration 	(+ ajax.js)
+	reg_httpServer_webContent((uint8_t *)"img.html", (uint8_t *)img_page);					// img.html 		: Base64 Image data example page
+
+	// Example #1
+	reg_httpServer_webContent((uint8_t *)"dio.html", (uint8_t *)dio_page);					// dio.html 		: Digital I/O control example page
+	reg_httpServer_webContent((uint8_t *)"dio.js", (uint8_t *)wiz6100web_dio_js);			// dio.js 			: JavaScript for digital I/O control 	(+ ajax.js)
+
+	// AJAX JavaScript functions
+	reg_httpServer_webContent((uint8_t *)"ajax.js", (uint8_t *)wiz6100web_ajax_js);			// ajax.js			: JavaScript for AJAX request transfer
 
 }
 /* USER CODE END 4 */
