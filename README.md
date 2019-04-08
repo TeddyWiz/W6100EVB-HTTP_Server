@@ -2,7 +2,30 @@
 Common to Any MCU, Easy to Add-on. Internet Offload co-Processor, HW TCP/IP chip,
 best fits for low-end Non-OS devices connecting to Ethernet for the Internet of Things. These will be updated continuously.
 
-## How to Use
+## Compile
+* 개발 환경 소개
+* 소스코드 변경없이 컴파일 할 수 있는 방법을 제안한다.
+  * 툴 설치까지는 말고, command 수행이나 프로젝트를 열고 컴파일 하는 정도로 구현되어 있으면 이 부분의 설명이 줄어들 수 있다.
+
+## Run
+### serial Display
+ <p align="center">
+   <img width="60%" src="image/serial.png" />
+ </p>
+### Web Page Main
+<p align="center">
+  <img width="60%" src="image/web_server_main.png" />
+</p>
+### Web Page NetWork Info
+<p align="center">
+  <img width="60%" src="image/web_server_netinfo.png" />
+</p>
+### Web Page RGB LED Control
+<p align="center">
+  <img width="60%" src="image/web_server_RGB_Control.png" />
+</p>
+
+## Tech note 
 The HTTP server library is roughly composed of the following functions.
 - httpServer_init(): Handler the HTTP server initialization (user's buffer, H/W sockets for HTTP)
 - reg_httpServer_webContent(): Function for example web page registration
@@ -42,20 +65,3 @@ CGI for W6100-EVB consists the 'Request name + .cgi' using HTTP GET/POST request
   - set_diostate.cgi (Setting the Digital I/O status, Post requset have to includes 'pin=x&val=y', 0(low) or 1(high))
 
 <br>
-## TEST Result<br>
-### serial Display<br>
- <p align="center">
-   <img width="60%" src="https://user-images.githubusercontent.com/48539052/55704589-79757800-5a17-11e9-89fe-3b22ce1aec48.png" />
- </p>
-### Web Page Main<br>
-<p align="center">
-  <img width="60%" src="https://user-images.githubusercontent.com/48539052/55704590-79757800-5a17-11e9-861b-90afd6fbd043.png" />
-</p>
-### Web Page NetWork Info<br>
-<p align="center">
-  <img width="60%" src="https://user-images.githubusercontent.com/48539052/55704591-7a0e0e80-5a17-11e9-9618-5c84418315a5.png" />
-</p>
-### Web Page RGB LED Control<br>
-<p align="center">
-  <img width="60%" src="https://user-images.githubusercontent.com/48539052/55704585-78dce180-5a17-11e9-9c52-c9cb1d89fe2c.png" />
-</p>
