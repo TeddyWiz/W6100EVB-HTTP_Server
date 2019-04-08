@@ -13,12 +13,12 @@ The HTTP server library is roughly composed of the following functions.
 
 W6100-EVB uses AJAX method and pre-defined CGI function to configure the network or monitor and control the I/O.
 <p align="center">
-  <img width="70%" src="image/cgi.png" />
+  <img width="70%" src="https://user-images.githubusercontent.com/48539052/55704586-78dce180-5a17-11e9-8b43-7e57b2c94cfb.png" />
 </p>
 CGI for W6100-EVB consists the 'Request name + .cgi' using HTTP GET/POST request method. The CGI for each HTTP methods are handled as below.
 
 <p align="center">
-  <img width="90%" src="image/cgi_processes.png" />
+  <img width="90%" src="https://user-images.githubusercontent.com/48539052/55704588-79757800-5a17-11e9-930b-893a18b9dd10.png" />
 </p>
 
 ### GET
