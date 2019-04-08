@@ -8,19 +8,22 @@ best fits for low-end Non-OS devices connecting to Ethernet for the Internet of 
   * 툴 설치까지는 말고, command 수행이나 프로젝트를 열고 컴파일 하는 정도로 구현되어 있으면 이 부분의 설명이 줄어들 수 있다.
 
 ## Run
-### serial Display
+### Message via Serial port
  <p align="center">
    <img width="60%" src="image/serial.png" />
  </p>
-### Web Page Main
+
+### Main page
 <p align="center">
   <img width="60%" src="image/web_server_main.png" />
 </p>
-### Web Page NetWork Info
+
+### NetWork Information page
 <p align="center">
   <img width="60%" src="image/web_server_netinfo.png" />
 </p>
-### Web Page RGB LED Control
+
+### RGB LED Control page
 <p align="center">
   <img width="60%" src="image/web_server_RGB_Control.png" />
 </p>
