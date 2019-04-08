@@ -8,6 +8,10 @@ best fits for low-end Non-OS devices connecting to Ethernet for the Internet of 
   * 툴 설치까지는 말고, command 수행이나 프로젝트를 열고 컴파일 하는 정도로 구현되어 있으면 이 부분의 설명이 줄어들 수 있다.
 
 ## Run
+* 테스트 환경
+* 테스트 프로그램
+* 테스트 결과 (Wireshark dump file 포함해주면 좋을듯)
+
 ### Message via Serial port
  <p align="center">
    <img width="60%" src="image/serial.png" />
@@ -28,7 +32,8 @@ best fits for low-end Non-OS devices connecting to Ethernet for the Internet of 
   <img width="60%" src="image/web_server_RGB_Control.png" />
 </p>
 
-## Tech note 
+## Code review
+* main.c 정도 설명
 The HTTP server library is roughly composed of the following functions.
 - httpServer_init(): Handler the HTTP server initialization (user's buffer, H/W sockets for HTTP)
 - reg_httpServer_webContent(): Function for example web page registration
