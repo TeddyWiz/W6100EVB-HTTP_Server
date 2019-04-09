@@ -2,17 +2,18 @@
 Common to Any MCU, Easy to Add-on. Internet Offload co-Processor, HW TCP/IP chip,
 best fits for low-end Non-OS devices connecting to Ethernet for the Internet of Things. These will be updated continuously.
 
-## Device
+## Hardware Environment
 * Setting
   - W6100EVB
   - STM ST-LINK
 <p align="center">
-  <img width="60%" src="https://user-images.githubusercontent.com/48539052/55774764-8656a200-5ad1-11e9-86a0-2cfd791cad0e.png" />
+  <img width="60%" src="https://wizwiki.net/wiki/lib/exe/fetch.php?w=600&tok=eabde4&media=products:w6100:w6100_evb:w6100-evb_callout.png" />
 </p>
 
-## Compile
+## Software Environment
 * Device Setting Program : STM32CubeMX Ver 5.1.0
 * Compile Program : TrueStudio Ver 9.2.0
+* Flash Program : FLASHER-STM32 Ver2.8.0
 * Compile method <br>
   - Git-Hub source file download <br>
   - TrueStudio -> W6100EVB-HTTP_Server in folder, run TrueStudio Project file <br>
@@ -30,45 +31,63 @@ best fits for low-end Non-OS devices connecting to Ethernet for the Internet of 
     <img width="60%" src="https://user-images.githubusercontent.com/48539052/55773236-9f0f8980-5aca-11e9-95f4-5e68b0045935.png" />
   </p>
 
-  - Run Debug - Click debug button or Key F8<br>
+  - If you have ST-LINK, Run Debug - Click debug button or Key F8<br>
   <p align="center">
     <img width="60%" src="https://user-images.githubusercontent.com/48539052/55773705-c404fc00-5acc-11e9-84dd-d0774a1d17db.png" />
   </p>
 
-## Code review
-* main.c code flow <br>
-<p align="center">
-  <img width="50%" src="https://user-images.githubusercontent.com/48539052/55776879-19470a80-5ad9-11e9-8945-32cdbd5ba0a3.png" />
-</p>
+  - Serial Flash Download<br>
+    - Check Serial Port<br>
+    <p align="center">
+      <img width="60%" src="https://user-images.githubusercontent.com/48539052/55779775-544d3c00-5ae1-11e9-8a5c-625062b4a40d.png" />
+    </p>
+
+    - Check Hex file <br>
+    <p align="center">
+      <img width="60%" src="https://user-images.githubusercontent.com/48539052/55779776-544d3c00-5ae1-11e9-91a3-024eca4ad7d2.png" />
+    </p>
+
+    - Device Program upload, See site below.
+      - [How to uploading to firmware ](https://wizwiki.net/wiki/doku.php?id=products:w6100:w6100_evb:getting_started)
+
+
 
 ## Run
-* Test Environment & Program <br>
+* Demo Environment & Program <br>
 
   - Windows 10 <br>
   - Internet Explorer <br>
   - Hercules <br>
 
 
-* Test Result <br>
+* Demo Result <br>
+  - Power On and push Reset button to start Program<br>
   - Program Run Serial display <br>
   <p align="center">
-    <img width="60%" src="https://user-images.githubusercontent.com/48539052/55773233-9e76f300-5aca-11e9-9260-22f32db7caaa.png" />
+    <img width="60%" src="https://user-images.githubusercontent.com/48539052/55780906-fb32d780-5ae3-11e9-872d-087e2ccd50d0.png" />
   </p>
 
-  - Chrome contact HTTP Server <br>
+  - Excute Internet Explorer and input device ip address<br>
+  - Internet Explorer contact HTTP Server <br>
   <p align="center">
-    <img width="60%" src="https://user-images.githubusercontent.com/48539052/55775470-64125380-5ad4-11e9-8168-5feff699d688.png" />
+    <img width="60%" src="https://user-images.githubusercontent.com/48539052/55781267-ba878e00-5ae4-11e9-9a48-0c7977b72746.png" />
   </p>
 
-  - Chrome HTTP Server Device Network Information <br>
+  - Internet Explorer HTTP Server Device Network Information <br>
   <p align="center">
     <img width="60%" src="https://user-images.githubusercontent.com/48539052/55775471-64125380-5ad4-11e9-8f41-627b819f0d47.png" />
   </p>
 
-  - Chrome HTTP Server Device RGB LED control <br>
+  - Internet Explorer HTTP Server Device RGB LED control <br>
   <p align="center">
     <img width="60%" src="https://user-images.githubusercontent.com/48539052/55775474-64125380-5ad4-11e9-9c38-0eed6cf6164f.png" />
   </p>
-  
+
+  ## Code review
+  * main.c code flow <br>
+  <p align="center">
+    <img width="50%" src="https://user-images.githubusercontent.com/48539052/55776879-19470a80-5ad9-11e9-8945-32cdbd5ba0a3.png" />
+  </p>
+
   - Test Wireshark packet capture file <br>
     - [HTTP_Server_Packet.zip](https://github.com/WIZnet-ioLibrary/W6100EVB-HTTP_Server/files/3057274/HTTP_Server_Packet.zip)
