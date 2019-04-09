@@ -3,9 +3,9 @@ Common to Any MCU, Easy to Add-on. Internet Offload co-Processor, HW TCP/IP chip
 best fits for low-end Non-OS devices connecting to Ethernet for the Internet of Things. These will be updated continuously.
 
 ## Hardware Environment
-* Setting
-  - W6100EVB
-  - STM ST-LINK
+* W6100EVB
+  - connecting micro usb.
+  - connecting Ethernet cable. <br>
 <p align="center">
   <img width="60%" src="https://wizwiki.net/wiki/lib/exe/fetch.php?w=600&tok=eabde4&media=products:w6100:w6100_evb:w6100-evb_callout.png" />
 </p>
