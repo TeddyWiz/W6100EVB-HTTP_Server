@@ -41,8 +41,7 @@ best fits for low-end Non-OS devices connecting to Ethernet for the Internet of 
 * Test Environment & Program
   - Windows 10
   - Internet Explorer
-  - Hercules
-* 테스트 결과 (Wireshark dump file 포함해주면 좋을듯)
+  - Hercules <br>
 * Test Result
   - Program Run Serial display
   <p align="center">
