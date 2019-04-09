@@ -42,7 +42,6 @@ uint8_t predefined_get_cgi_processor(uint8_t * uri_name, uint8_t * buf, uint16_t
 	int8_t cgi_dio = -1;
 	int8_t cgi_ain = -1;
 
-
 	if(strcmp((const char *)uri_name, "todo.cgi") == 0)
 	{
 		// to do
@@ -104,7 +103,6 @@ void make_json_netinfo(uint8_t * buf, uint16_t * len)
 			                                \"gua\":\"%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X\",\
 											\"sn6\":\"%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X\",\
 											\"gw6\":\"%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X:%.2X%.2X\",\
-			                                \"dhcp\":\"%d\"\
 											});",
 											netinfo.mac[0], netinfo.mac[1], netinfo.mac[2], netinfo.mac[3], netinfo.mac[4], netinfo.mac[5],
 											netinfo.ip[0], netinfo.ip[1], netinfo.ip[2], netinfo.ip[3],

@@ -59,7 +59,7 @@ SPI_HandleTypeDef hspi2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-wiz_NetInfo gWIZNETINFO = { .mac = {0x00,0x08,0xdc,0x57,0x57,0x20},
+wiz_NetInfo gWIZNETINFO = { .mac = {0x00,0x08,0xdc,0xff,0xff,0xff},
 							.ip = {192,168,0,13},
 							.sn = {255, 255, 255, 0},
 							.gw = {192, 168, 0, 1},
@@ -67,11 +67,11 @@ wiz_NetInfo gWIZNETINFO = { .mac = {0x00,0x08,0xdc,0x57,0x57,0x20},
 							.lla = {0xfe,0x80, 0x00,0x00,
 								 0x00,0x00, 0x00,0x00,
 								 0x02,0x08, 0xdc,0xff,
-								 0xfe,0x57, 0x57,0x61},
+								 0xfe,0xff, 0xff,0xff},
 				            .gua={0x20,0x01,0x02,0xb8,
 								 0x00,0x10,0x00,0x01,
 								 0x02,0x08,0xdc,0xff,
-								 0xfe,0x57,0x57,0x61},
+								 0xfe,0xff,0xff,0xff},
 				            .sn6={0xff,0xff,0xff,0xff,
 								 0xff,0xff,0xff,0xff,
 								 0x00,0x00,0x00, 0x00,
@@ -139,6 +139,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
      */
      HAL_UART_Receive_IT(&huart1, &rxData, 1);
      HAL_UART_Transmit(&huart1, &rxData, 1, 1000);
+     //massage input end enter key flag
      URX_BUF[URX_BUF_cnt++] = rxData;
      if((rxData == '\r') ||(URX_BUF_cnt > DATA_BUF_SIZE))
      {
@@ -213,6 +214,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	//message input serial display & send tcp client message
     if(URX_BUF_Flag)
 	{
 		URX_BUF_Flag = 0;
@@ -222,7 +224,11 @@ int main(void)
 			send(1, URX_BUF, URX_BUF_cnt);
 		URX_BUF_cnt = 0;
 	}
+
+    //HTTP Server
     for(i = 0; i < MAX_HTTPSOCK; i++)	httpServer_run(i); 	// HTTP Server handler
+
+    //loopback server
 	loopback_tcps(0, data_buf, 5000, AF_INET6);
 	loopback_tcps(1, data_buf, 5001, AF_INET);
     /* USER CODE BEGIN 3 */

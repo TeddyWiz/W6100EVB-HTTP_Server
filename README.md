@@ -48,7 +48,7 @@ best fits for low-end Non-OS devices connecting to Ethernet for the Internet of 
     </p>
 
     - Device Program upload, See site below.
-      - [How to uploading to firmware ](https://wizwiki.net/wiki/doku.php?id=products:w6100:w6100_evb:getting_started)
+      - [How to uploading to firmware ](https://wizwiki.net/wiki/doku.php?id=products:w6100:w6100_evb:getting_started#how_to_uploading_to_firmware)
 
 
 
@@ -64,7 +64,7 @@ best fits for low-end Non-OS devices connecting to Ethernet for the Internet of 
   - Power On and push Reset button to start Program<br>
   - Program Run Serial display <br>
   <p align="center">
-    <img width="60%" src="https://user-images.githubusercontent.com/48539052/55780906-fb32d780-5ae3-11e9-872d-087e2ccd50d0.png" />
+    <img width="60%" src="https://user-images.githubusercontent.com/48539052/55784555-c75bb000-5aeb-11e9-9bbe-a662209c9285.png" />
   </p>
 
   - Excute Internet Explorer and input device ip address<br>
@@ -75,7 +75,7 @@ best fits for low-end Non-OS devices connecting to Ethernet for the Internet of 
 
   - Internet Explorer HTTP Server Device Network Information <br>
   <p align="center">
-    <img width="60%" src="https://user-images.githubusercontent.com/48539052/55775471-64125380-5ad4-11e9-8f41-627b819f0d47.png" />
+    <img width="60%" src="https://user-images.githubusercontent.com/48539052/55784554-c75bb000-5aeb-11e9-8fee-bc279b42e73f.png" />
   </p>
 
   - Internet Explorer HTTP Server Device RGB LED control <br>
