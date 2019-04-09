@@ -233,13 +233,16 @@ void httpServer_run(uint8_t seqnum)
 			if(socket(s, Sn_MR_TCP, HTTP_SERVER_PORT, 0x00) == s)    /* Reinitialize the socket */
 			{
 #ifdef _HTTPSERVER_DEBUG_
-				printf("> HTTPSocket[%d] : OPEN\r\n", s);
+				printf("> HTTPSocket[%d] : OPEN[%d]\r\n", s, HTTP_SERVER_PORT);
 #endif
 			}
 			break;
 
 		case SOCK_INIT:
 			listen(s);
+#ifdef _HTTPSERVER_DEBUG_
+			printf("> HTTPSocket[%d] : LISTEN\r\n", s);
+#endif
 			break;
 
 		case SOCK_LISTEN:

@@ -20,8 +20,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "W6100/w6100.h"
-#include "loopback/loopback.h"
+#include "w6100.h"
+#include "loopback.h"
 #include "wizchip_conf.h"
 #include "socket.h"
 #include "httpServer.h"
@@ -39,8 +39,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
-uint8_t socknumlist[] = {2, 3};
+uint8_t socknumlist[] = {2, 3, 4, 5};
 
 uint8_t RX_BUF[DATA_BUF_SIZE];
 uint8_t TX_BUF[DATA_BUF_SIZE];
@@ -60,7 +59,6 @@ SPI_HandleTypeDef hspi2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-//Network Info Setting
 wiz_NetInfo gWIZNETINFO = { .mac = {0x00,0x08,0xdc,0x57,0x57,0x20},
 							.ip = {192,168,0,13},
 							.sn = {255, 255, 255, 0},
@@ -147,7 +145,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     	 URX_BUF_Flag = 1;
      }
 }
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -162,7 +159,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	uint8_t i;
+  uint8_t syslock = SYS_NET_LOCK;
+  uint8_t i;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -186,42 +184,45 @@ int main(void)
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
   HAL_UART_Receive_IT(&huart1, &rxData, 1);
 
   printf("< W6100EVB Web Server & Loop Back TEST!! > \r\n");
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
 
-
-
-  NETUNLOCK();
-  wizchip_setnetinfo(&gWIZNETINFO);
+  //NETUNLOCK();
+  //wizchip_setnetinfo(&gWIZNETINFO);
+  //W6100Initialze();
   W6100Initialze();
+  ctlwizchip(CW_SYS_UNLOCK,& syslock);
+  ctlnetwork(CN_SET_NETINFO,&gWIZNETINFO);
 
   printf("VERSION(%x) = %.2x \r\n", _VER_, getVER());
   print_network_information();
-  /* USER CODE END 2 */
 
   /* HTTP Server Initialization  */
   httpServer_init(TX_BUF, RX_BUF, MAX_HTTPSOCK, socknumlist);		// Tx/Rx buffers (1kB) / The number of W5500 chip H/W sockets in use
 
   /* Web content registration (web content in webpage.h, Example web pages) */
   wed_define_func();
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-	if(URX_BUF_Flag)
+    if(URX_BUF_Flag)
 	{
 		URX_BUF_Flag = 0;
 		URX_BUF[URX_BUF_cnt] = 0;
-		printf("\r\n input[%s]\r\n", URX_BUF);
+		printf("\r\n input:%s\r\n", URX_BUF);
 		if(getSn_SR(1) == SOCK_ESTABLISHED)
 			send(1, URX_BUF, URX_BUF_cnt);
 		URX_BUF_cnt = 0;
 	}
-	for(i = 0; i < MAX_HTTPSOCK; i++)	httpServer_run(i); 	// HTTP Server handler
+    for(i = 0; i < MAX_HTTPSOCK; i++)	httpServer_run(i); 	// HTTP Server handler
 	loopback_tcps(0, data_buf, 5000, AF_INET6);
 	loopback_tcps(1, data_buf, 5001, AF_INET);
     /* USER CODE BEGIN 3 */
@@ -240,12 +241,13 @@ void SystemClock_Config(void)
 
   /** Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI_DIV2;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL16;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL6;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -379,6 +381,7 @@ static void MX_GPIO_Init(void)
 
 }
 
+/* USER CODE BEGIN 4 */
 /* USER CODE BEGIN 4 */
 void print_network_information(void)
 {

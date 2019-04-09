@@ -9,7 +9,7 @@
 #define PORT_TCPS		5000
 #define PORT_UDPS       3000
 
-#define MAX_HTTPSOCK	2
+#define MAX_HTTPSOCK	4
 
 // Addfess Family v4
 #define AF_INET 2

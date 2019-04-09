@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=E:/Teddy/Workspace/2019/02. W6100/WebServer001/Inc
+HeaderPath=E:/Teddy/Workspace/2019/02. W6100/TrueStudio/Webserver/Inc
 HeaderFiles=stm32f1xx_it.h;stm32f1xx_hal_conf.h;main.h;
-SourcePath=E:/Teddy/Workspace/2019/02. W6100/WebServer001/Src
+SourcePath=E:/Teddy/Workspace/2019/02. W6100/TrueStudio/Webserver/Src
 SourceFiles=stm32f1xx_it.c;stm32f1xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]
