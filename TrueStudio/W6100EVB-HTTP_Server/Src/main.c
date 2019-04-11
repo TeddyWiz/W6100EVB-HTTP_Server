@@ -105,7 +105,7 @@ uint8_t Router_IP[16]= {0xff,0x02,0x00,0x00,
                          };
 uint8_t data_buf[2048];
 void print_network_information(void);
-void wed_define_func(void);
+void wep_define_func(void);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -206,7 +206,7 @@ int main(void)
   httpServer_init(TX_BUF, RX_BUF, MAX_HTTPSOCK, socknumlist);		// Tx/Rx buffers (1kB) / The number of W5500 chip H/W sockets in use
 
   /* Web content registration (web content in webpage.h, Example web pages) */
-  wed_define_func();
+  wep_define_func();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -417,7 +417,7 @@ void print_network_information(void)
 
 }
 
-void wed_define_func(void)
+void wep_define_func(void)
 {
 	// Index page and netinfo / base64 image demo
 	reg_httpServer_webContent((uint8_t *)"index.html", (uint8_t *)index_page);				// index.html 		: Main page example
