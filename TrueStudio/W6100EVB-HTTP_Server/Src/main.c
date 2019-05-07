@@ -20,21 +20,31 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "w6100.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 #include "loopback.h"
-#include "wizchip_conf.h"
 #include "socket.h"
 #include "httpServer.h"
 #include "webpage.h"
-#include "W6100RelFunctions.h"
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
+#include "board_init.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+#define SOCK_TCPS       0
+#define SOCK_UDPS       1
+#define PORT_TCPS		5000
+#define PORT_UDPS       3000
 
+#define MAX_HTTPSOCK	4
+
+// Addfess Family v4
+#define AF_INET 2
+// Addfess Family v6
+#define AF_INET6 23
+// Addfess Family DUAL
+#define AF_INET_DUAL 11
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -192,10 +202,9 @@ int main(void)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, GPIO_PIN_SET);
 
-  //NETUNLOCK();
-  //wizchip_setnetinfo(&gWIZNETINFO);
-  //W6100Initialze();
-  W6100Initialze();
+
+  BoardInitialze();
+
   ctlwizchip(CW_SYS_UNLOCK,& syslock);
   ctlnetwork(CN_SET_NETINFO,&gWIZNETINFO);
 
@@ -214,8 +223,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
 	//message input serial display & send tcp client message
-    if(URX_BUF_Flag)
+	if(URX_BUF_Flag)
 	{
 		URX_BUF_Flag = 0;
 		URX_BUF[URX_BUF_cnt] = 0;
@@ -225,13 +236,12 @@ int main(void)
 		URX_BUF_cnt = 0;
 	}
 
-    //HTTP Server
-    for(i = 0; i < MAX_HTTPSOCK; i++)	httpServer_run(i); 	// HTTP Server handler
+	//HTTP Server
+	for(i = 0; i < MAX_HTTPSOCK; i++)	httpServer_run(i); 	// HTTP Server handler
 
-    //loopback server
-	loopback_tcps(0, data_buf, 5000, AF_INET6);
-	loopback_tcps(1, data_buf, 5001, AF_INET);
-    /* USER CODE BEGIN 3 */
+	//loopback server
+	loopback_tcps(0, data_buf, 5000, AS_IPV6);
+	loopback_tcps(1, data_buf, 5001, AS_IPV4);
   }
   /* USER CODE END 3 */
 }
