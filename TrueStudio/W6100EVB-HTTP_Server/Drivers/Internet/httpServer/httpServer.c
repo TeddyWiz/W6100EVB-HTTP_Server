@@ -230,7 +230,7 @@ void httpServer_run(uint8_t seqnum)
 #ifdef _HTTPSERVER_DEBUG_
 			printf("> HTTPSocket[%d] : CLOSED\r\n", s);
 #endif
-			if(socket(s, Sn_MR_TCP, HTTP_SERVER_PORT, 0x00) == s)    /* Reinitialize the socket */
+			if(socket(s, Sn_MR_TCPD, HTTP_SERVER_PORT, 0x00) == s)    /* Reinitialize the socket */
 			{
 #ifdef _HTTPSERVER_DEBUG_
 				printf("> HTTPSocket[%d] : OPEN[%d]\r\n", s, HTTP_SERVER_PORT);

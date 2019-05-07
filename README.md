@@ -89,6 +89,11 @@ best fits for low-end Non-OS devices connecting to Ethernet for the Internet of 
     <img width="60%" src="https://github.com/WIZnet-ioLibrary/W6100EVB-HTTP_Server/wiki/Result_01.png" />
   </p>
 
+  - Connect Ipv6 Address <br>
+  <p align="center">
+    <img width="60%" src="https://github.com/WIZnet-ioLibrary/W6100EVB-HTTP_Server/wiki/Result_04.png" />
+  </p>
+
   - Internet Explorer HTTP Server Device Network Information <br>
   <p align="center">
     <img width="60%" src="https://github.com/WIZnet-ioLibrary/W6100EVB-HTTP_Server/wiki/Result_02.png" />
